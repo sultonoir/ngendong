@@ -2,72 +2,183 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider     = "mysql"
+  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+  // Further reading:
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+enum Role {
+  guest
+  admin
+  marketing
+}
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
+model User {
+  id             String        @id @default(uuid())
+  name           String?
+  email          String        @unique
+  role           Role          @default(guest)
+  image          String?
+  hashedPassword String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @default(now())
+  notifi         Notifi[]
+  reservations   Reservation[]
+  rating         Rating[]
+  room           Room[]
+  Account        Account[]
+  Session        Session[]
 
-    @@index([name])
+  @@index([email])
+  @@index([id])
+}
+
+enum CategoryNotify {
+  promo
+  owner
+  payment
+}
+
+model Notifi {
+  id             String         @id @default(uuid())
+  isRead         Boolean
+  role           CategoryNotify @default(payment)
+  createdAt      DateTime       @default(now())
+  userId         String?
+  reservationsId String?
+  roomId         String
+  resrvation     Reservation    @relation(fields: [reservationId], references: [id])
+  user           User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room           Room           @relation(fields: [roomId], references: [id])
+  reservationId  String
+
+  @@index([userId])
+  @@index([roomId])
+  @@index([reservationId])
+}
+
+model Room {
+  id            String        @id @default(uuid())
+  title         String        @unique
+  description   String        @db.Text
+  imageRoom     ImageRoom[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now())
+  bed           Int
+  roomCount     Int
+  guestCount    Int
+  price         Float
+  locationValue String
+  rating        Rating[]
+  fasilitas     Fasilitas[] // Menambahkan relasi fasilitas
+  reservations  Reservation[]
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Notifi        Notifi[]
+
+  @@index([userId])
+  @@index([title])
+  @@index([id])
+}
+
+model ImageRoom {
+  id        String   @id @default(uuid())
+  url       String
+  createdAt DateTime @default(now())
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, id])
+}
+
+model Fasilitas {
+  id        String @id @default(uuid())
+  fasilitas String
+  roomId    String
+  room      Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId])
+  @@index([id])
+}
+
+model Rating {
+  id            String       @id @default(uuid())
+  message       String       @db.Text
+  value         Int
+  createdAt     DateTime     @default(now())
+  roomId        String
+  room          Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId        String?
+  user          User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reservationId String?
+  reservation   Reservation? @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, id, userId, reservationId])
+  @@index([userId])
+  @@index([reservationId])
+}
+
+model Reservation {
+  id         String   @id @default(uuid())
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Int
+  status     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [email], onDelete: Cascade)
+  roomId     String
+  room       Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  rating     Rating[]
+  Notifi     Notifi[]
+
+  @@index([userId])
+  @@index([roomId, id, userId])
 }
 
 // Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? // @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? // @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? // @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? // @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
+  @@index([userId])
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }

@@ -1,11 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import { type Adapter } from "next-auth/adapters";
+import CredentialsProvider from "next-auth/providers/credentials";
 import DiscordProvider from "next-auth/providers/discord";
+import GoogleProvider from "next-auth/providers/google";
+import { compare } from "bcrypt-ts";
+import { type Adapter } from "next-auth/adapters";
+import { type User, type Role } from "@prisma/client";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
@@ -21,7 +28,7 @@ declare module "next-auth" {
     user: {
       id: string;
       // ...other properties
-      // role: UserRole;
+      role: Role;
     } & DefaultSession["user"];
   }
 
@@ -37,30 +44,88 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
-  },
   adapter: PrismaAdapter(db) as Adapter,
+  callbacks: {
+    session: ({ session, token }) => {
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.email = token.email;
+        session.user.image = token.picture;
+        session.user.role = token.role as Role;
+        session.user.name = token.name;
+      }
+      return session;
+    },
+    jwt({ token, user, trigger, session }) {
+      const u = user as unknown as User;
+
+      if (trigger === "update" && session) {
+        // Note, that `session` can be any arbitrary object, remember to validate it!
+        token.name = session.name;
+        token.picture = session.image;
+      }
+      if (user) {
+        return {
+          ...token,
+          id: u.id,
+          email: u.email,
+          name: u.name,
+          picture: u.image,
+          role: u.role,
+        };
+      }
+      return token;
+    },
+  },
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
+      id: "signin",
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "example@example.com",
+        },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials.password) {
+          return null;
+        }
+
+        const user = await db.user.findUnique({
+          where: {
+            email: credentials.email,
+          },
+        });
+
+        if (!user?.hashedPassword) {
+          throw new Error("User not found");
+        }
+
+        const isCorrectPassword = await compare(
+          credentials.password,
+          user.hashedPassword,
+        );
+
+        if (!isCorrectPassword) {
+          throw new Error("Wrong password");
+        }
+
+        return user;
+      },
+    }),
   ],
 };
 
