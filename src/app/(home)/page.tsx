@@ -2,6 +2,7 @@ import RoomCard from "@/components/template/room/RoomCard";
 import { api } from "@/trpc/server";
 import React from "react";
 
+export const dynamic = "force-dynamic";
 const page = async () => {
   const rooms = await api.post.getAllRooms.query();
   return (
