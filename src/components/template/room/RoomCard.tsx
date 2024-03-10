@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { type ImageRoom, Room } from "@prisma/client";
+import { type ImageRoom, type Room } from "@prisma/client";
 
 interface Props {
   room: Room & {
@@ -10,7 +10,7 @@ interface Props {
   };
 }
 
-const Room = ({ room }: Props) => {
+const RoomCard = ({ room }: Props) => {
   return (
     <Card className="overflow-hidden">
       <div className="aspect-video">
@@ -43,4 +43,4 @@ const Room = ({ room }: Props) => {
   );
 };
 
-export default Room;
+export default RoomCard;
