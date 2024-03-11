@@ -12,33 +12,31 @@ interface Props {
 
 const RoomCard = ({ room }: Props) => {
   return (
-    <Card className="overflow-hidden">
-      <div className="aspect-video">
-        <Link
-          href={`/room/${room.title}`}
-          className="relative flex h-full w-full"
-        >
+    <Card className="border-none shadow-none">
+      <div className="aspect-square overflow-hidden rounded-lg">
+        <Link href={`/room/${room.title}`} className="relative flex size-full">
           <Image
             src={room.imageRoom[0]?.url ?? ""}
             alt="Photo by Drew Beamer"
-            sizes="(min-width: 1480px) 249px, (min-width: 1040px) 17.14vw, (min-width: 780px) calc(33.33vw - 37px), calc(100vw - 66px)"
+            sizes="(min-width: 1480px) 500px, (min-width: 1040px) 17.14vw, (min-width: 780px) calc(33.33vw - 37px), calc(100vw - 66px)"
             fill
             priority
             className="object-cover"
           />
         </Link>
       </div>
-      <CardContent className="flex flex-col gap-2 px-2">
+      <CardContent className="mt-2 flex flex-col px-2 pb-2">
         <Link
           href={`/room/${room.title}`}
-          className="block w-full truncate hover:text-primary/80"
+          className="block w-full truncate font-semibold leading-none hover:text-primary/80"
         >
           {room.title}
         </Link>
         <div className="text-sm text-muted-foreground">{room.description}</div>
-        <div className="text-lg font-bold">${room.price}</div>
       </CardContent>
-      <CardFooter className="border-t p-2"></CardFooter>
+      <CardFooter className="px-2 py-0">
+        <div className="text-lg font-bold">${room.price}</div>
+      </CardFooter>
     </Card>
   );
 };

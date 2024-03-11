@@ -1,0 +1,45 @@
+"use client";
+import DialogAuth from "@/components/dialog/DialogAuth";
+import { categories } from "@/dummy";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import React from "react";
+
+const Categories = () => {
+  const params = useSearchParams();
+  const category = params?.get("category");
+  return (
+    <div className="container flex flex-1 items-center gap-5">
+      <div className="flex flex-row items-center justify-between gap-x-4 overflow-x-auto pt-4">
+        {categories.map((item) => (
+          <Link
+            href={{
+              pathname: "/",
+              query: { category: item.label },
+            }}
+            key={item.label}
+            className={cn(
+              "flex cursor-pointer flex-col flex-wrap items-center justify-center gap-2 border-b-2 p-3 transition hover:text-neutral-800",
+              {
+                "border-b-neutral-800 text-neutral-800":
+                  category === item.label,
+                " border-transparent text-neutral-500": category !== item.label,
+              },
+            )}
+          >
+            <item.icon size={26} />
+            <div className="whitespace-nowrap text-sm font-medium">
+              {item.label}
+            </div>
+          </Link>
+        ))}
+      </div>
+      <div className="flex flex-1 justify-end">
+        <DialogAuth />
+      </div>
+    </div>
+  );
+};
+
+export default Categories;
