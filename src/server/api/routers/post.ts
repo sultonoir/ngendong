@@ -1,10 +1,5 @@
+import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { z } from "zod";
-
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "@/server/api/trpc";
 
 export const postRouter = createTRPCRouter({
   getAllRooms: publicProcedure.query(async ({ ctx }) => {
@@ -16,4 +11,23 @@ export const postRouter = createTRPCRouter({
     });
     return rooms;
   }),
+  getAllNovel: publicProcedure.query(async ({ ctx }) => {
+    const novels = await ctx.db.novel.findMany();
+    return novels;
+  }),
+  postNovel: publicProcedure
+    .input(
+      z.object({
+        title: z.string(),
+        image: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.novel.create({
+        data: {
+          title: input.title,
+          image: input.image,
+        },
+      });
+    }),
 });
