@@ -10,7 +10,7 @@ import {
 import CredentialsProvider from "next-auth/providers/credentials";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google";
-import { compare } from "bcrypt-ts";
+import GithubProvider from "next-auth/providers/github";
 import { type Adapter } from "next-auth/adapters";
 import { type User, type Role } from "@prisma/client";
 
@@ -89,18 +89,21 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
+    GithubProvider({
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
+    }),
     CredentialsProvider({
-      id: "signin",
+      name: "credentials",
       credentials: {
         email: {
           label: "Email",
           type: "email",
           placeholder: "example@example.com",
         },
-        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) {
+        if (!credentials?.email) {
           return null;
         }
 
@@ -110,17 +113,8 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        if (!user?.hashedPassword) {
+        if (!user) {
           throw new Error("User not found");
-        }
-
-        const isCorrectPassword = await compare(
-          credentials.password,
-          user.hashedPassword,
-        );
-
-        if (!isCorrectPassword) {
-          throw new Error("Wrong password");
         }
 
         return user;

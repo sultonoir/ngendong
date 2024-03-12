@@ -25,6 +25,7 @@ model User {
   id             String        @id @default(uuid())
   name           String?
   email          String        @unique
+  emailVerified  DateTime?
   role           Role          @default(guest)
   image          String?
   hashedPassword String?
@@ -36,9 +37,48 @@ model User {
   room           Room[]
   Account        Account[]
   Session        Session[]
+  message        Messages[]
+  member         Member[]
 
   @@index([email])
   @@index([id])
+}
+
+model Conversation {
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Member    Member[]
+  Messages  Messages[]
+}
+
+model Messages {
+  id             String       @id @default(uuid())
+  message        String
+  userId         String
+  conversationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([id])
+  @@index([conversationId])
+}
+
+model Member {
+  id             String       @id @default(uuid())
+  userId         String
+  conversationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([id])
+  @@index([conversationId])
 }
 
 enum CategoryNotify {
@@ -50,14 +90,15 @@ enum CategoryNotify {
 model Notifi {
   id             String         @id @default(uuid())
   isRead         Boolean
+  message        String
   role           CategoryNotify @default(payment)
   createdAt      DateTime       @default(now())
   userId         String?
   reservationsId String?
-  roomId         String
+  roomId         String?
   resrvation     Reservation    @relation(fields: [reservationId], references: [id])
   user           User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  room           Room           @relation(fields: [roomId], references: [id])
+  room           Room?          @relation(fields: [roomId], references: [id])
   reservationId  String
 
   @@index([userId])
@@ -153,11 +194,11 @@ model Account {
   provider          String
   providerAccountId String
   refresh_token     String? @db.Text
-  access_token      String? // @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? // @db.Text
+  id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 

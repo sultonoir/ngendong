@@ -1,14 +1,18 @@
 "use client";
-import DialogAuth from "@/components/dialog/DialogAuth";
+import DialogFilter from "@/components/dialog/DialogFilter";
 import { categories } from "@/dummy";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import React from "react";
 
 const Categories = () => {
+  const path = usePathname();
   const params = useSearchParams();
   const category = params?.get("category");
+  if (path !== "/") {
+    return null;
+  }
   return (
     <div className="container flex flex-1 items-center gap-5">
       <div className="flex flex-row items-center justify-between gap-x-4 overflow-x-auto pt-4">
@@ -36,7 +40,7 @@ const Categories = () => {
         ))}
       </div>
       <div className="flex flex-1 justify-end">
-        <DialogAuth />
+        <DialogFilter />
       </div>
     </div>
   );

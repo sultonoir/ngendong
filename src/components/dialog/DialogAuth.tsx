@@ -6,24 +6,31 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import useDialog from "@/hooks/useDialog";
-import { Button } from "../ui/button";
+import FormOauthButton from "../template/form/formauth/FormOauthButton";
+import FormSignup from "../template/form/formauth/FormSignup";
+
 const DialogAuth = () => {
   const { isOpen, onOpen } = useDialog();
   return (
     <Dialog open={isOpen} onOpenChange={onOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
-      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
+          <DialogTitle>Welcome to Ngendong</DialogTitle>
+          <DialogDescription>Signin or Signup</DialogDescription>
+          <FormSignup />
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t"></span>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+          <FormOauthButton />
         </DialogHeader>
       </DialogContent>
     </Dialog>

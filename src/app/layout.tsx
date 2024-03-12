@@ -5,6 +5,7 @@ import { GeistSans } from "geist/font/sans";
 import { TRPCReactProvider } from "@/trpc/react";
 import SessionProvider from "@/components/providers/Provider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import DialogAuth from "@/components/dialog/DialogAuth";
 
 export const metadata = {
   title: "Ngendong",
@@ -25,6 +26,7 @@ export default function RootLayout({
           <SessionProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               {children}
+              <DialogAuth />
             </ThemeProvider>
           </SessionProvider>
         </TRPCReactProvider>

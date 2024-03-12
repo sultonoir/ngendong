@@ -7,85 +7,112 @@ import {
   GiIsland,
   GiModernCity,
   GiVillage,
+  GiTowerBridge,
 } from "react-icons/gi";
 import { IoDiamond } from "react-icons/io5";
 import { MdOutlineVilla, MdVilla } from "react-icons/md";
 import { HiOutlineHomeModern } from "react-icons/hi2";
 import { TbSunset2 } from "react-icons/tb";
+import { LuHistory, LuMessagesSquare } from "react-icons/lu";
+import { BsBookmarkHeart } from "react-icons/bs";
+
 export const categories = [
   {
-    label: "Tepi pantai",
+    label: "Beach",
     icon: TbBeach,
-    description: "Properti ini berada di pusat dekat pantai",
+    value: "beach",
   },
   {
-    label: "Pusat kota",
+    label: "City center",
     icon: GiModernCity,
-    description: "Properti ini berada di pusat kota",
+    value: "city+center",
   },
   {
-    label: "Pedesaan",
+    label: "Village",
     icon: GiVillage,
-    description: "Properti ini berada dipedesaan",
+    value: "village",
   },
   {
-    label: "Pemandangan cantik",
+    label: "Amazing views",
     icon: TbSunset2,
-    description: "Properti ini berada dipedesaan",
-  },
-  {
-    label: "Rumah",
-    icon: HiOutlineHomeModern,
-    description: "Properti ini berada dipedesaan!",
+    value: "amazing+views",
   },
   {
     label: "Villa",
+    icon: HiOutlineHomeModern,
+    value: "villa",
+  },
+  {
+    label: "Iconic cities",
+    icon: GiTowerBridge,
+    value: "iconic+cities",
+  },
+  {
+    label: "Tiny homes",
     icon: MdOutlineVilla,
-    description: "Properti ini memiliki villa keren!",
+    value: "tiny+home",
   },
   {
-    label: "Pegunungan",
+    label: "Mountains",
     icon: TbMountain,
-    description: "Properti ini memiliki pemandangan pegunungan",
+    value: "mountains",
   },
   {
-    label: "Kolam renang",
+    label: "Amazing pools",
     icon: TbPool,
-    description: "Properti ini memiliki kolam yang indah!",
+    value: "amazing+pools",
   },
   {
-    label: "Pulau",
+    label: "Tropical",
     icon: GiIsland,
-    description: "Properti ini berada di sebuah pulau!",
+    value: "tropical",
   },
   {
-    label: "Tepi danau",
+    label: "Lake",
     icon: GiBoatFishing,
-    description: "Properti ini berada di dekat danau!",
+    value: "lake",
   },
   {
     label: "Mansion",
     icon: MdVilla,
-    description: "Properti ini mansion keren!",
+    value: "mansion",
   },
   {
-    label: "Goa",
+    label: "Cave",
     icon: GiCaveEntrance,
-    description: "Properti ini berada di goa",
+    value: "cave",
   },
   {
     label: "Camping",
     icon: GiForestCamp,
-    description: "Properti ini menawarkan kegiatan berkemah!",
+    value: "camping",
   },
   {
-    label: "Lumbung",
+    label: "Barn",
     icon: GiBarn,
-    description: "Properti ini ada di lumbung!",
+    value: "barn",
   },
   {
-    label: "luxury",
+    label: "Luxury",
     icon: IoDiamond,
-    description: "Properti ini baru dan mewah!",
+    value: "luxury",
+  },
+];
+
+export const NavMenu = [
+  {
+    title: "Messages",
+    path: "/Messages",
+    icon: LuMessagesSquare,
+  },
+  {
+    title: "Favorite",
+    path: "/favorite",
+    icon: BsBookmarkHeart,
+  },
+  {
+    title: "History",
+    path: "/History",
+    icon: LuHistory,
   },
 ];
