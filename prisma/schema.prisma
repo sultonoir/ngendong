@@ -2,76 +2,261 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
-
-    // If you have enabled foreign key constraints for your database, remove this line.
-    relationMode = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+enum Role {
+  guest
+  admin
+  marketing
+}
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
+model User {
+  id             String        @id @default(uuid())
+  name           String?
+  email          String        @unique
+  emailVerified  DateTime?
+  role           Role          @default(guest)
+  image          String?
+  hashedPassword String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @default(now())
+  drafRooms      DrafRooms?
+  notifi         Notifi[]
+  reservations   Reservation[]
+  rating         Rating[]
+  room           Room[]
+  Account        Account[]
+  Session        Session[]
+  message        Messages[]
+  member         Member[]
 
-    @@index([name])
-    @@index([createdById])
+  @@index([email])
+  @@index([id])
+}
+
+model Conversation {
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Member    Member[]
+  Messages  Messages[]
+}
+
+model Messages {
+  id             String       @id @default(uuid())
+  message        String
+  userId         String
+  conversationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([id])
+  @@index([conversationId])
+}
+
+model Member {
+  id             String       @id @default(uuid())
+  userId         String
+  conversationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([id])
+  @@index([conversationId])
+}
+
+enum CategoryNotify {
+  promo
+  owner
+  payment
+}
+
+model Notifi {
+  id             String         @id @default(uuid())
+  isRead         Boolean
+  message        String
+  role           CategoryNotify @default(payment)
+  createdAt      DateTime       @default(now())
+  userId         String?
+  reservationsId String?
+  roomId         String?
+  resrvation     Reservation    @relation(fields: [reservationId], references: [id])
+  user           User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room           Room?          @relation(fields: [roomId], references: [id])
+  reservationId  String
+
+  @@index([userId])
+  @@index([roomId])
+  @@index([reservationId])
+}
+
+enum typeRooms {
+  fullHouse
+  rooms
+  shared
+}
+
+model DrafRooms {
+  id            String      @id @default(uuid())
+  pathname      String?
+  title         String?
+  slug          String?
+  type          typeRooms   @default(fullHouse)
+  description   String?
+  imageRoom     DrafImage[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  bed           Int?
+  roomCount     Int?
+  guestCount    Int?
+  price         Float?
+  uniqK         Boolean?
+  locationValue String
+  userId        String      @unique
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DrafImage {
+  id        String    @id @default(uuid())
+  url       String
+  createdAt DateTime  @default(now())
+  drafId    String
+  draf      DrafRooms @relation(fields: [drafId], references: [id], onDelete: Cascade)
+
+  @@index([drafId, id])
+}
+
+model Room {
+  id            String        @id @default(uuid())
+  title         String        @unique
+  type          typeRooms     @default(fullHouse)
+  slug          String        @unique
+  description   String        @db.Text
+  imageRoom     ImageRoom[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now())
+  bed           Int
+  roomCount     Int
+  guestCount    Int
+  price         Float
+  locationValue String
+  rating        Rating[]
+  fasilitas     Fasilitas[] // Menambahkan relasi fasilitas
+  reservations  Reservation[]
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Notifi        Notifi[]
+
+  @@index([slug])
+  @@index([userId])
+  @@index([title])
+  @@index([id])
+}
+
+model ImageRoom {
+  id        String   @id @default(uuid())
+  url       String
+  createdAt DateTime @default(now())
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, id])
+}
+
+model Fasilitas {
+  id        String @id @default(uuid())
+  fasilitas String
+  roomId    String
+  room      Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId])
+  @@index([id])
+}
+
+model Rating {
+  id            String       @id @default(uuid())
+  message       String       @db.Text
+  value         Int
+  createdAt     DateTime     @default(now())
+  roomId        String
+  room          Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId        String?
+  user          User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reservationId String?
+  reservation   Reservation? @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, id, userId, reservationId])
+  @@index([userId])
+  @@index([reservationId])
+}
+
+model Reservation {
+  id         String   @id @default(uuid())
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Int
+  status     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [email], onDelete: Cascade)
+  roomId     String
+  room       Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  rating     Rating[]
+  Notifi     Notifi[]
+
+  @@index([userId])
+  @@index([roomId, id, userId])
 }
 
 // Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
-    @@index([userId])
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@index([userId])
-}
-
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
+  @@index([userId])
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
