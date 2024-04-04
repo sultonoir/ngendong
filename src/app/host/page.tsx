@@ -1,4 +1,8 @@
 import { Toaster } from "@/components/providers/Toaster";
+import ButtonTobeOwner from "@/components/template/host/ButtonTobeOwner";
+import PopularQuetions from "@/components/template/host/PopularQuetions";
+import Profit from "@/components/template/host/Profit";
+import Revenue from "@/components/template/host/Revenue";
 import Logo from "@/components/template/navbar/Logo";
 import Header from "@/components/template/navbar/header";
 import Image from "next/image";
@@ -11,11 +15,11 @@ const page = () => {
       <Header>
         <nav className="container flex items-center justify-between py-2">
           <Logo />
-          {/* <ButtonTobeOwner /> */}
+          <ButtonTobeOwner />
         </nav>
       </Header>
       <div className="container grid h-[calc(100dvh-67px)] grid-cols-1 lg:grid-cols-2 lg:gap-10">
-        {/* <Revenue num={num} /> */}
+        <Revenue num={num} />
         <div className="relative flex size-full">
           <Image
             src="/hotel.png"
@@ -27,8 +31,8 @@ const page = () => {
           />
         </div>
       </div>
-      {/* <Profit />
-      <PopularQuetions /> */}
+      <Profit />
+      <PopularQuetions />
       <Toaster richColors position="bottom-left" />
     </main>
   );
