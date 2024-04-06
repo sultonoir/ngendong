@@ -31,6 +31,8 @@ const ButtonTobeOwner = () => {
   const handleSubmit = () => {
     if (!data) {
       onOpen(true);
+    } else if (data.user.role === "admin") {
+      return router.push("/owner");
     } else {
       mutate();
     }

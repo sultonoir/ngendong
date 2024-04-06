@@ -12,9 +12,11 @@ import {
 import { IoDiamond } from "react-icons/io5";
 import { MdOutlineVilla, MdVilla } from "react-icons/md";
 import { HiOutlineHomeModern } from "react-icons/hi2";
-import { TbSunset2 } from "react-icons/tb";
+import { TbSunset2, TbHomeLink } from "react-icons/tb";
 import { LuHistory, LuMessagesSquare } from "react-icons/lu";
 import { BsBookmarkHeart } from "react-icons/bs";
+import { TfiHome } from "react-icons/tfi";
+import { PiDoorOpen } from "react-icons/pi";
 
 export const categories = [
   {
@@ -114,5 +116,26 @@ export const NavMenu = [
     title: "History",
     path: "/History",
     icon: LuHistory,
+  },
+];
+
+export const LodgingType = [
+  {
+    key: "an-entire-place",
+    label: "An entire place",
+    icon: TfiHome,
+    desc: "Guests have the whole place to themselves.",
+  },
+  {
+    key: "a-room",
+    label: "A room",
+    icon: PiDoorOpen,
+    desc: "Guests have their own room in a home, plus access to shared spaces.",
+  },
+  {
+    key: "a-shared-room",
+    label: "A shared room",
+    icon: TbHomeLink,
+    desc: "Guests sleep in a room or common area that may be shared with you or others.",
   },
 ];

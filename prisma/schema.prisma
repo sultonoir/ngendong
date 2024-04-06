@@ -111,23 +111,32 @@ enum typeRooms {
 }
 
 model DrafRooms {
-  id            String      @id @default(uuid())
+  id            String         @id @default(uuid())
   pathname      String?
   title         String?
   slug          String?
-  type          typeRooms   @default(fullHouse)
+  type          String?
   description   String?
   imageRoom     DrafImage[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @default(now())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  category      String?
   bed           Int?
   roomCount     Int?
   guestCount    Int?
   price         Float?
   uniqK         Boolean?
-  locationValue String?
-  userId        String      @unique
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  locationValue DrafLocations?
+  userId        String         @unique
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DrafLocations {
+  id        String    @id @default(uuid())
+  latitude  Float
+  longitude Float
+  drafId    String    @unique
+  daraf     DrafRooms @relation(fields: [drafId], references: [id], onDelete: Cascade)
 }
 
 model DrafImage {
@@ -143,17 +152,18 @@ model DrafImage {
 model Room {
   id            String        @id @default(uuid())
   title         String        @unique
-  type          typeRooms     @default(fullHouse)
+  type          String
   slug          String        @unique
   description   String        @db.Text
   imageRoom     ImageRoom[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @default(now())
   bed           Int
+  category      String
   roomCount     Int
   guestCount    Int
   price         Float
-  locationValue String
+  locationValue LocationRoom?
   rating        Rating[]
   fasilitas     Fasilitas[] // Menambahkan relasi fasilitas
   reservations  Reservation[]
@@ -165,6 +175,16 @@ model Room {
   @@index([userId])
   @@index([title])
   @@index([id])
+}
+
+model LocationRoom {
+  id        String   @id @default(uuid())
+  url       String
+  createdAt DateTime @default(now())
+  roomId    String   @unique
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, id])
 }
 
 model ImageRoom {

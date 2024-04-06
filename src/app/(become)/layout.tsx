@@ -1,3 +1,5 @@
+import { Toaster } from "@/components/providers/Toaster";
+import SaveLodging from "@/components/template/host/SaveLodging";
 import Logo from "@/components/template/navbar/Logo";
 import { getServerAuthSession } from "@/server/auth";
 import { redirect } from "next/navigation";
@@ -10,12 +12,12 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
   }
   return (
     <React.Fragment>
-      <nav className="flex items-center justify-between px-10 py-2">
+      <nav className="sticky top-0 flex items-center justify-between border border-default/50 bg-background px-10 py-2">
         <Logo />
+        <SaveLodging />
       </nav>
-      <main className="container h-[calc(100dvh-140px)] max-w-screen-xl">
-        {children}
-      </main>
+      {children}
+      <Toaster />
     </React.Fragment>
   );
 };
