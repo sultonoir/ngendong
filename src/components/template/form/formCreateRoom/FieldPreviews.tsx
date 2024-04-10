@@ -7,7 +7,7 @@ import { BsCalendar2Check } from "react-icons/bs";
 import { MdCalendarToday, MdOutlineEdit } from "react-icons/md";
 
 const FieldPreview = () => {
-  const { image, title } = useDraft();
+  const { image, title, price } = useDraft();
 
   const lists = [
     {
@@ -57,13 +57,13 @@ const FieldPreview = () => {
             <CardBody className="overflow-visible py-2">
               <div className="flex items-start justify-between">
                 <div className="max-w-[calc(100%-80px)] flex-1">
-                  <div className="text-small font-semibold">{title}</div>
+                  <div className="text-[15px] font-semibold">{title}</div>
                   <div>
-                    <b>$200</b>
+                    <b>${price}</b>
                     <span className="text-default-500">Night.</span>
                   </div>
                 </div>
-                <span className="inline-flex items-center gap-1">
+                <span className="inline-flex items-center gap-1 text-[15px]">
                   New
                   <IoMdStar />
                 </span>

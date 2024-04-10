@@ -41,8 +41,11 @@ export const lodgingRoute = createTRPCRouter({
           latitude: z.number(),
           longitude: z.number(),
         }),
-        image: z.array(z.string()),
-        unique: z.string(),
+        image: z.array(
+          z.object({
+            url: z.string(),
+          }),
+        ),
         title: z.string(),
         desc: z.string(),
         bed: z.number(),
@@ -72,6 +75,38 @@ export const lodgingRoute = createTRPCRouter({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "failing to make room",
+        });
+      }
+      const createImgRoom = await Promise.all(
+        input.image.map((item) =>
+          ctx.db.imageRoom.create({
+            data: {
+              roomId: lodging.id,
+              url: item.url,
+            },
+          }),
+        ),
+      );
+      if (!createImgRoom.length) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "failing to make image rooms",
+        });
+      }
+      const fasilitasRooms = await Promise.all(
+        input.amenities.map((item) =>
+          ctx.db.fasilitas.create({
+            data: {
+              roomId: lodging.id,
+              fasilitas: item.fasilitas,
+            },
+          }),
+        ),
+      );
+      if (!fasilitasRooms.length) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "failing to make fasility rooms",
         });
       }
     }),
