@@ -1,13 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "cockroachdb"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
@@ -19,7 +15,7 @@ enum Role {
 }
 
 model User {
-  id             String        @id @default(uuid())
+  id             String        @id @default(cuid())
   name           String?
   email          String        @unique
   emailVerified  DateTime?
@@ -42,7 +38,7 @@ model User {
 }
 
 model Conversation {
-  id        String     @id @default(uuid())
+  id        String     @id @default(cuid())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   Member    Member[]
@@ -50,7 +46,7 @@ model Conversation {
 }
 
 model Messages {
-  id             String       @id @default(uuid())
+  id             String       @id @default(cuid())
   message        String
   userId         String
   conversationId String
@@ -65,7 +61,7 @@ model Messages {
 }
 
 model Member {
-  id             String       @id @default(uuid())
+  id             String       @id @default(cuid())
   userId         String
   conversationId String
   createdAt      DateTime     @default(now())
@@ -85,7 +81,7 @@ enum CategoryNotify {
 }
 
 model Notifi {
-  id             String         @id @default(uuid())
+  id             String         @id @default(cuid())
   isRead         Boolean
   message        String
   role           CategoryNotify @default(payment)
@@ -110,11 +106,11 @@ enum typeRooms {
 }
 
 model Room {
-  id            String        @id @default(uuid())
+  id            String        @id @default(cuid())
   title         String        @unique
   type          String
   slug          String        @unique
-  description   String        @db.Text
+  description   String
   imageRoom     ImageRoom[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @default(now())
@@ -139,7 +135,7 @@ model Room {
 }
 
 model LocationRoom {
-  id        String @id @default(uuid())
+  id        String @id @default(cuid())
   latitude  Float
   longitude Float
   name      String
@@ -151,7 +147,7 @@ model LocationRoom {
 }
 
 model ImageRoom {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   url       String
   createdAt DateTime @default(now())
   roomId    String
@@ -161,7 +157,7 @@ model ImageRoom {
 }
 
 model Fasilitas {
-  id        String @id @default(uuid())
+  id        String @id @default(cuid())
   fasilitas String
   roomId    String
   room      Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
@@ -171,7 +167,7 @@ model Fasilitas {
 }
 
 model Discount {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   title     String
   nominal   Int
   createdAt DateTime @default(now())
@@ -182,8 +178,8 @@ model Discount {
 }
 
 model Rating {
-  id            String       @id @default(uuid())
-  message       String       @db.Text
+  id            String       @id @default(cuid())
+  message       String
   value         Int
   createdAt     DateTime     @default(now())
   roomId        String
@@ -199,7 +195,7 @@ model Rating {
 }
 
 model Reservation {
-  id         String   @id @default(uuid())
+  id         String   @id @default(cuid())
   startDate  DateTime
   endDate    DateTime
   totalPrice Int
@@ -224,12 +220,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 

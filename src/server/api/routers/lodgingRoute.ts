@@ -1,6 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import slugify from "slugify";
 
 export const lodgingRoute = createTRPCRouter({
   toBeOwner: protectedProcedure.mutation(async ({ ctx }) => {
@@ -13,7 +14,7 @@ export const lodgingRoute = createTRPCRouter({
     if (user?.role === "admin") {
       return;
     } else {
-      await ctx.db.user.update({
+      const updateUser = await ctx.db.user.update({
         where: {
           id,
         },
@@ -21,6 +22,7 @@ export const lodgingRoute = createTRPCRouter({
           role: "admin",
         },
       });
+      return updateUser.role;
     }
   }),
   createLodging: protectedProcedure
@@ -51,10 +53,11 @@ export const lodgingRoute = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const lodging = ctx.db.room.create({
+      const slug = slugify(input.title);
+      const lodging = await ctx.db.room.create({
         data: {
           title: input.title,
-          slug: "",
+          slug,
           description: input.desc,
           type: input.type,
           bed: input.bed,
@@ -65,5 +68,11 @@ export const lodgingRoute = createTRPCRouter({
           userId,
         },
       });
+      if (!lodging.id) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "failing to make room",
+        });
+      }
     }),
 });
