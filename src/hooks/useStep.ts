@@ -1,14 +1,6 @@
+import { type StepStore } from "@/types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-interface StepStore {
-  step: number;
-  barOne: number;
-  barTwo: number;
-  barThree: number;
-  onNext: () => void;
-  onBack: () => void;
-}
 
 const useStep = create<StepStore>()(
   persist(

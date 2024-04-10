@@ -1,11 +1,5 @@
+import { type DialogStore } from "@/types";
 import { create } from "zustand";
-
-interface DialogStore {
-  isOpen: boolean;
-  status: string;
-  onOpen: (isOpen: boolean) => void;
-  handleStatus: (status: string) => void;
-}
 
 const useDialog = create<DialogStore>((set) => ({
   isOpen: false,
