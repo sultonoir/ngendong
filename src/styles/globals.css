@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Menghilangkan gulir pada input type number saat mendapat fokus */
+.no-scroll::-webkit-inner-spin-button,
+.no-scroll::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

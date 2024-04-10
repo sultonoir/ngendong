@@ -1,70 +1,72 @@
 "use client";
-
-import { api } from "@/trpc/react";
-import { Button } from "@nextui-org/react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { motion } from "framer-motion";
+import FieldAmenities from "@/components/template/form/formCreateRoom/FieldAmenities";
+import FieldDesc from "@/components/template/form/formCreateRoom/FieldDesc";
+import FieldFloor from "@/components/template/form/formCreateRoom/FieldFloor";
+import FieldHome from "@/components/template/form/formCreateRoom/FieldHome";
+import FieldImage from "@/components/template/form/formCreateRoom/FieldImage";
+import FieldLocations from "@/components/template/form/formCreateRoom/FieldLocations";
+import FieldPreview from "@/components/template/form/formCreateRoom/FieldPreviews";
+import FieldPrice from "@/components/template/form/formCreateRoom/FieldPrice";
+import FieldPrivacy from "@/components/template/form/formCreateRoom/FieldPrivacy";
+import FieldStructure from "@/components/template/form/formCreateRoom/FieldStructure";
+import FieldTitle from "@/components/template/form/formCreateRoom/FieldTitle";
+import FooterCreateRooms from "@/components/template/form/formCreateRoom/FooterCreateRooms";
+import useStep from "@/hooks/useStep";
+import React, { useMemo } from "react";
 
 const HostClient = () => {
-  const router = useRouter();
-  const { mutate, isPending } = api.lodging.createDraft.useMutation({
-    onSuccess: (e) => {
-      router.push(`/become-a-host/${e}/structure`);
-    },
-  });
+  const { step } = useStep();
+
+  const Content = useMemo(() => {
+    switch (step) {
+      case 0:
+        return <FieldHome />;
+      case 1:
+        return <FieldStructure />;
+      case 2:
+        return <FieldPrivacy />;
+      case 3:
+        return <FieldLocations />;
+      case 4:
+        return <FieldFloor />;
+      case 5:
+        return (
+          <FieldHome
+            stp={2}
+            ttl="Make your place stand out"
+            desc="In this step, you'll add some of the amenities your place offers, plus 5 or more photos. Then, you'll create a title and description."
+          />
+        );
+      case 6:
+        return <FieldAmenities />;
+      case 7:
+        return <FieldImage />;
+      case 8:
+        return <FieldTitle />;
+      case 9:
+        return <FieldDesc />;
+      case 10:
+        return (
+          <FieldHome
+            stp={3}
+            ttl="Finish up and publish"
+            desc="Finally, you'll choose booking settings, set up pricing, and publish your listing."
+          />
+        );
+      case 11:
+        return <FieldPrice />;
+      case 12:
+        return <FieldPreview />;
+      default:
+        return null;
+    }
+  }, [step]);
+
   return (
-    <React.Fragment>
-      <main className="container h-[calc(100dvh-160px)] max-w-screen-xl">
-        <section className="grid h-full grid-cols-1 items-center justify-center gap-10 lg:grid-cols-2">
-          <div className="h-fit">
-            <div className="flex flex-col justify-center gap-4 lg:gap-10">
-              <span className="text-base font-semibold lg:text-lg">Step 1</span>
-              <h1 className="text-4xl font-semibold lg:text-5xl">
-                Tell us about your place
-              </h1>
-              <p className="text-base text-foreground/80">
-                In this step, we&apos;ll ask you which type of property you have
-                and if guests will book the entire place or just a room. Then
-                let us know the location and how many guests can stay.
-              </p>
-            </div>
-          </div>
-          <div className="relative h-96 w-full lg:size-full">
-            <Image
-              src="/home.png"
-              alt="logo"
-              fill
-              loading="eager"
-              className="size-auto object-contain"
-            />
-          </div>
-        </section>
-      </main>
-      <div className="sticky bottom-0">
-        <div className="flex w-full flex-col">
-          <div className="flex h-2 items-center gap-4">
-            <div className="relative size-full bg-content2"></div>
-            <div className="relative size-full bg-content2"></div>
-            <div className="relative size-full bg-content2">
-              <motion.div
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: "20%" }}
-                transition={{ delay: 0.175 }}
-                style={{ width: "20%" }}
-                className="absolute inset-0 bg-white transition-all"
-              />
-            </div>
-          </div>
-          <div className="flex items-center justify-end px-10 py-4">
-            <Button isLoading={isPending} onClick={() => mutate()}>
-              Next
-            </Button>
-          </div>
-        </div>
-      </div>
-    </React.Fragment>
+    <>
+      {Content}
+      <FooterCreateRooms />
+    </>
   );
 };
 

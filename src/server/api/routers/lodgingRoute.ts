@@ -23,80 +23,47 @@ export const lodgingRoute = createTRPCRouter({
       });
     }
   }),
-  createDraft: protectedProcedure.mutation(async ({ ctx }) => {
-    const userId = ctx.session.user.id;
-    const exist = await ctx.db.drafRooms.findFirst({
-      where: {
-        userId: { contains: userId },
-      },
-    });
-    if (exist) {
-      await ctx.db.drafRooms.delete({
-        where: {
-          id: exist.id,
-          userId,
-        },
-      });
-    }
-    try {
-      const lodging = await ctx.db.drafRooms.create({
-        data: {
-          userId,
-        },
-      });
-      return lodging.id;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
-      }
-    }
-  }),
-  updateDraft: protectedProcedure
+  createLodging: protectedProcedure
     .input(
       z.object({
-        id: z.string().optional(),
-        pathname: z.string().optional(),
-        title: z.string().optional(),
-        slug: z.string().optional(),
-        description: z.string().optional(),
-        bed: z.number().optional(),
-        roomCount: z.number().optional(),
-        guestCount: z.number().optional(),
-        price: z.number().optional(),
-        uniqK: z.boolean().optional(),
-        type: z.string().optional(),
-        category: z.string().optional(),
-        locationValue: z.string().optional(),
+        type: z.string(),
+        category: z.string(),
+        amenities: z.array(
+          z.object({
+            fasilitas: z.string(),
+          }),
+        ),
+        locations: z.object({
+          name: z.string(),
+          country: z.string(),
+          latitude: z.number(),
+          longitude: z.number(),
+        }),
+        image: z.array(z.string()),
+        unique: z.string(),
+        title: z.string(),
+        desc: z.string(),
+        bed: z.number(),
+        bedrooms: z.number(),
+        guest: z.number(),
+        price: z.number(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      await ctx.db.drafRooms.update({
-        where: {
-          id: input.id,
+      const lodging = ctx.db.room.create({
+        data: {
+          title: input.title,
+          slug: "",
+          description: input.desc,
+          type: input.type,
+          bed: input.bed,
+          category: input.category,
+          roomCount: input.bedrooms,
+          guestCount: input.guest,
+          price: input.price,
           userId,
         },
-        data: input,
       });
-    }),
-  getDraft: protectedProcedure
-    .input(
-      z.object({
-        id: z.string().optional(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const userId = ctx.session.user.id;
-      const lodging = await ctx.db.drafRooms.findFirst({
-        where: {
-          OR: [
-            {
-              id: input.id,
-              userId,
-            },
-          ],
-        },
-      });
-      return lodging;
     }),
 });

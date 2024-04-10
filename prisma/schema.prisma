@@ -28,7 +28,6 @@ model User {
   hashedPassword String?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @default(now())
-  drafRooms      DrafRooms?
   notifi         Notifi[]
   reservations   Reservation[]
   rating         Rating[]
@@ -110,45 +109,6 @@ enum typeRooms {
   shared
 }
 
-model DrafRooms {
-  id            String         @id @default(uuid())
-  pathname      String?
-  title         String?
-  slug          String?
-  type          String?
-  description   String?
-  imageRoom     DrafImage[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now())
-  category      String?
-  bed           Int?
-  roomCount     Int?
-  guestCount    Int?
-  price         Float?
-  uniqK         Boolean?
-  locationValue DrafLocations?
-  userId        String         @unique
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model DrafLocations {
-  id        String    @id @default(uuid())
-  latitude  Float
-  longitude Float
-  drafId    String    @unique
-  daraf     DrafRooms @relation(fields: [drafId], references: [id], onDelete: Cascade)
-}
-
-model DrafImage {
-  id        String    @id @default(uuid())
-  url       String
-  createdAt DateTime  @default(now())
-  drafId    String
-  draf      DrafRooms @relation(fields: [drafId], references: [id], onDelete: Cascade)
-
-  @@index([drafId, id])
-}
-
 model Room {
   id            String        @id @default(uuid())
   title         String        @unique
@@ -167,6 +127,7 @@ model Room {
   rating        Rating[]
   fasilitas     Fasilitas[] // Menambahkan relasi fasilitas
   reservations  Reservation[]
+  discount      Discount[]
   userId        String
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   Notifi        Notifi[]
@@ -178,11 +139,13 @@ model Room {
 }
 
 model LocationRoom {
-  id        String   @id @default(uuid())
-  url       String
-  createdAt DateTime @default(now())
-  roomId    String   @unique
-  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  id        String @id @default(uuid())
+  latitude  Float
+  longitude Float
+  name      String
+  country   String
+  roomId    String @unique
+  room      Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   @@index([roomId, id])
 }
@@ -205,6 +168,17 @@ model Fasilitas {
 
   @@index([roomId])
   @@index([id])
+}
+
+model Discount {
+  id        String   @id @default(uuid())
+  title     String
+  nominal   Int
+  createdAt DateTime @default(now())
+  roomId    String?
+  room      Room?    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId])
 }
 
 model Rating {

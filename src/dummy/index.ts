@@ -16,7 +16,54 @@ import { TbSunset2, TbHomeLink } from "react-icons/tb";
 import { LuHistory, LuMessagesSquare } from "react-icons/lu";
 import { BsBookmarkHeart } from "react-icons/bs";
 import { TfiHome } from "react-icons/tfi";
-import { PiDoorOpen } from "react-icons/pi";
+import { PiDoorOpen, PiFireExtinguisherFill } from "react-icons/pi";
+import { AiFillCar } from "react-icons/ai";
+import { BsSnow, BsWifi } from "react-icons/bs";
+import { MdLocalLaundryService, MdOutlineDesk } from "react-icons/md";
+import { LiaFirstAidSolid, LiaHotTubSolid } from "react-icons/lia";
+
+export const facility = [
+  {
+    key: "ac",
+    label: "AC",
+    icon: BsSnow,
+  },
+  {
+    key: "wifi",
+    label: "Wifi",
+    icon: BsWifi,
+  },
+  {
+    key: "dedicated-workspace",
+    label: "Dedicated workspace",
+    icon: MdOutlineDesk,
+  },
+  {
+    key: "hot-tube",
+    label: "Hot tube",
+    icon: LiaHotTubSolid,
+  },
+  {
+    key: "wash",
+    label: "Washer",
+    icon: MdLocalLaundryService,
+  },
+  {
+    key: "fire-extinguisher",
+    label: "Fire extinguisher",
+    icon: PiFireExtinguisherFill,
+  },
+  {
+    key: "free-parking",
+    label: "Free parking on premise",
+    icon: AiFillCar,
+  },
+  {
+    key: "firs-aid-kit",
+    label: "Firs aid kit",
+    icon: LiaFirstAidSolid,
+  },
+];
 
 export const categories = [
   {
@@ -121,19 +168,19 @@ export const NavMenu = [
 
 export const LodgingType = [
   {
-    key: "an-entire-place",
+    key: "home",
     label: "An entire place",
     icon: TfiHome,
     desc: "Guests have the whole place to themselves.",
   },
   {
-    key: "a-room",
+    key: "room",
     label: "A room",
     icon: PiDoorOpen,
     desc: "Guests have their own room in a home, plus access to shared spaces.",
   },
   {
-    key: "a-shared-room",
+    key: "shared",
     label: "A shared room",
     icon: TbHomeLink,
     desc: "Guests sleep in a room or common area that may be shared with you or others.",
