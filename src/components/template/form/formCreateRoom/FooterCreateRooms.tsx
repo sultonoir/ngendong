@@ -47,7 +47,7 @@ const FooterCreateRooms = () => {
       case 6:
         return amenities.length === 0;
       case 7:
-        return image.length === 0;
+        return image.length <= 4;
       case 8:
         return title === "";
       case 9:

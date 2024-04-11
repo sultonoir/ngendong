@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useDialog from "@/hooks/useDialog";
-import { Button } from "@nextui-org/react";
+import { Button, cn } from "@nextui-org/react";
 const FormOauthButton = () => {
   const [isLoading, setIsLoading] = React.useState({
     github: false,
@@ -29,7 +29,8 @@ const FormOauthButton = () => {
         Signin with google
       </Button>
       <Button
-        disabled={isLoading.github}
+        isDisabled={isLoading.github}
+        isLoading={isLoading.github}
         variant="ghost"
         onClick={async () => {
           setIsLoading({
@@ -58,12 +59,17 @@ const FormOauthButton = () => {
           });
         }}
       >
-        <FaGithub className="mr-2" />
+        <FaGithub
+          className={cn("mr-2", {
+            hidden: isLoading.github === true,
+          })}
+        />
         Signin with github
       </Button>
       <Button
         variant="ghost"
-        disabled={isLoading.demo}
+        isDisabled={isLoading.demo}
+        isLoading={isLoading.demo}
         onClick={async () => {
           setIsLoading({
             ...isLoading,
@@ -91,7 +97,11 @@ const FormOauthButton = () => {
           });
         }}
       >
-        <FcKey className="mr-2" />
+        <FcKey
+          className={cn("mr-2", {
+            hidden: isLoading.demo === true,
+          })}
+        />
         try demo account
       </Button>
     </div>

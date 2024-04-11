@@ -106,7 +106,8 @@ const FormSignup = () => {
           )}
         />
         <Button
-          disabled={createUser.isPending}
+          isDisabled={createUser.isPending}
+          isLoading={createUser.isPending}
           type="submit"
           className="w-full"
           color="primary"

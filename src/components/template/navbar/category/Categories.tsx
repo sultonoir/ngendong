@@ -19,14 +19,14 @@ const Categories = () => {
           <Link
             href={{
               pathname: "/",
-              query: { category: item.label },
+              query: { category: item.value },
             }}
             key={item.label}
             className={cn(
               "flex cursor-pointer flex-col flex-wrap items-center justify-center gap-2 border-b-2 p-3 transition hover:text-foreground",
               {
-                "border-b-2 border-foreground": category === item.label,
-                " border-transparent text-neutral-500": category !== item.label,
+                "border-b-2 border-foreground": category === item.value,
+                " border-transparent text-neutral-500": category !== item.value,
               },
             )}
           >

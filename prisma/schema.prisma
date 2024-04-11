@@ -32,9 +32,33 @@ model User {
   Session        Session[]
   message        Messages[]
   member         Member[]
+  wishlists      Whishlist[]
 
   @@index([email])
   @@index([id])
+}
+
+model Lists {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  wishlistsId String
+  wishlists   Whishlist @relation(fields: [wishlistsId], references: [id], onDelete: Cascade)
+  roomId      String    @unique
+  room        Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([wishlistsId])
+}
+
+model Whishlist {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  title     String
+  userId    String
+  list      Lists[]
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Conversation {
@@ -127,6 +151,7 @@ model Room {
   userId        String
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   Notifi        Notifi[]
+  Lists         Lists?
 
   @@index([slug])
   @@index([userId])

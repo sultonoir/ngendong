@@ -46,8 +46,13 @@ const FieldLocations = () => {
 
       const data: LocationProps[] = await response.json();
 
-      // Mengupdate state locations dengan data yang diperoleh
-      locationChange(data[0]);
+      const convert = data.map((item) => ({
+        name: item.name,
+        latitude: item.latitude,
+        longitude: item.longitude,
+        country,
+      }));
+      locationChange(convert[0]);
     } catch (error) {
       console.error("Terjadi kesalahan:", error);
       // Handle error sesuai kebutuhan, misalnya menampilkan pesan kepada pengguna

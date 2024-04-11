@@ -60,7 +60,9 @@ export const lodgingRoute = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const slug = slugify(input.title);
+      const slug = slugify(input.title, {
+        lower: true,
+      });
       const lodging = await ctx.db.room.create({
         data: {
           title: input.title,
@@ -132,6 +134,26 @@ export const lodgingRoute = createTRPCRouter({
 
       return lodging.slug;
     }),
+  getLodging: publicProcedure
+    .input(
+      z.object({
+        category: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const lodging = await ctx.db.room.findMany({
+        where: {
+          category: input.category,
+        },
+        include: {
+          imageRoom: true,
+          fasilitas: true,
+          rating: true,
+          locationValue: true,
+        },
+      });
+      return lodging;
+    }),
   getMyLodging: protectedProcedure.query(async ({ ctx }) => {
     const lodging = await ctx.db.room.findFirstOrThrow({
       where: {
@@ -153,7 +175,7 @@ export const lodgingRoute = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const lodging = await ctx.db.room.findFirstOrThrow({
+      const lodging = await ctx.db.room.findUnique({
         where: {
           slug: input.slug,
         },

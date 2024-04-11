@@ -7,8 +7,15 @@ const FieldPrice = () => {
   const [show, setShow] = useState(false);
   const { price, setPrice } = useDraft();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const numericValue = parseInt(value);
+    const value: number = parseFloat(e.target.value);
+    const formattedValue: string = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(value);
+
+    const numericValue: number = parseFloat(
+      formattedValue.replace(/[$,]/g, ""),
+    );
     setPrice(numericValue);
   };
 
