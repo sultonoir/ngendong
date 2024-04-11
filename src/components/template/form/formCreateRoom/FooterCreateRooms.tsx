@@ -76,8 +76,8 @@ const FooterCreateRooms = () => {
       setPending(false);
       toast.success("Congratulations, your lodging realesed");
     },
-    onSettled: () => {
-      router.push("/owner");
+    onSettled: (e) => {
+      router.push(`/rooms/${e}`);
     },
   });
 

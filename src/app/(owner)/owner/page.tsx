@@ -1,10 +1,10 @@
-import Link from "next/link";
+import Rooms from "@/components/template/home/Rooms";
 import React from "react";
 
 const Page = async () => {
   return (
     <div>
-      <Link href="/become-a-host">Click me</Link>
+      <Rooms />
     </div>
   );
 };

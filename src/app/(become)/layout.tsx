@@ -26,7 +26,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
         </Button>
       </nav>
       {children}
-      <Toaster />
+      <Toaster position="top-right" richColors />
     </React.Fragment>
   );
 };

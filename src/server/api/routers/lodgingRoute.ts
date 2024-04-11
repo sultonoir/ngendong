@@ -1,4 +1,8 @@
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import slugify from "slugify";
@@ -109,5 +113,57 @@ export const lodgingRoute = createTRPCRouter({
           message: "failing to make fasility rooms",
         });
       }
+      const locations = await ctx.db.locationRoom.create({
+        data: {
+          roomId: lodging.id,
+          country: input.locations.country,
+          latitude: input.locations.latitude,
+          longitude: input.locations.longitude,
+          name: input.locations.name,
+        },
+      });
+
+      if (!locations) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "failing to make locations rooms",
+        });
+      }
+
+      return lodging.slug;
+    }),
+  getMyLodging: protectedProcedure.query(async ({ ctx }) => {
+    const lodging = await ctx.db.room.findFirstOrThrow({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      include: {
+        imageRoom: true,
+        fasilitas: true,
+        rating: true,
+        locationValue: true,
+      },
+    });
+    return lodging;
+  }),
+  getLodgingByName: publicProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const lodging = await ctx.db.room.findFirstOrThrow({
+        where: {
+          slug: input.slug,
+        },
+        include: {
+          imageRoom: true,
+          fasilitas: true,
+          rating: true,
+          locationValue: true,
+        },
+      });
+      return lodging;
     }),
 });
