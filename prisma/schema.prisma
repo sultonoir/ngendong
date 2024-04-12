@@ -38,27 +38,17 @@ model User {
   @@index([id])
 }
 
-model Lists {
-  id          String    @id @default(cuid())
-  createdAt   DateTime  @default(now())
-  wishlistsId String
-  wishlists   Whishlist @relation(fields: [wishlistsId], references: [id], onDelete: Cascade)
-  roomId      String    @unique
-  room        Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
-
-  @@index([wishlistsId])
-}
-
 model Whishlist {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  title     String
   userId    String
-  list      Lists[]
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([roomId])
 }
 
 model Conversation {
@@ -105,18 +95,17 @@ enum CategoryNotify {
 }
 
 model Notifi {
-  id             String         @id @default(cuid())
-  isRead         Boolean
-  message        String
-  role           CategoryNotify @default(payment)
-  createdAt      DateTime       @default(now())
-  userId         String?
-  reservationsId String?
-  roomId         String?
-  resrvation     Reservation    @relation(fields: [reservationId], references: [id])
-  user           User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  room           Room?          @relation(fields: [roomId], references: [id])
-  reservationId  String
+  id            String         @id @default(cuid())
+  isRead        Boolean
+  message       String
+  role          CategoryNotify @default(payment)
+  createdAt     DateTime       @default(now())
+  userId        String?
+  reservationId String?
+  roomId        String?
+  resrvation    Reservation?   @relation(fields: [reservationId], references: [id])
+  user          User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room          Room?          @relation(fields: [roomId], references: [id])
 
   @@index([userId])
   @@index([roomId])
@@ -151,7 +140,7 @@ model Room {
   userId        String
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   Notifi        Notifi[]
-  Lists         Lists?
+  wishlists     Whishlist[]
 
   @@index([slug])
   @@index([userId])
@@ -219,18 +208,26 @@ model Rating {
   @@index([reservationId])
 }
 
+enum StatusReservation {
+  pending
+  failed
+  refunded
+  ordered
+  succeded
+}
+
 model Reservation {
-  id         String   @id @default(cuid())
+  id         String            @id @default(cuid())
   startDate  DateTime
   endDate    DateTime
   totalPrice Int
-  status     String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  userId     String?
-  user       User?    @relation(fields: [userId], references: [email], onDelete: Cascade)
+  status     StatusReservation @default(pending)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  userId     String
+  user       User              @relation(fields: [userId], references: [email], onDelete: Cascade)
   roomId     String
-  room       Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  room       Room              @relation(fields: [roomId], references: [id], onDelete: Cascade)
   rating     Rating[]
   Notifi     Notifi[]
 

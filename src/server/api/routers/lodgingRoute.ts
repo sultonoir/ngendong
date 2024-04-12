@@ -184,6 +184,7 @@ export const lodgingRoute = createTRPCRouter({
           fasilitas: true,
           rating: true,
           locationValue: true,
+          user: true,
         },
       });
       return lodging;

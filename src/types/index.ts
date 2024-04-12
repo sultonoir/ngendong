@@ -1,3 +1,5 @@
+import { type DateRange } from "react-day-picker";
+
 export type LocationProps = {
   name: string;
   latitude: number;
@@ -70,4 +72,11 @@ export type DialogStore = {
   status: string;
   onOpen: (isOpen: boolean) => void;
   handleStatus: (status: string) => void;
+};
+
+export type DayCountStore = {
+  date: DateRange | undefined;
+  count: number;
+  setDate: (value: DateRange | undefined) => void;
+  onChange: (value: number) => void;
 };

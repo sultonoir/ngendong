@@ -30,6 +30,7 @@ const page = async ({ searchParams }: Props) => {
             key={item.id}
             location={item.locationValue}
             picture={item.imageRoom}
+            rating={item.rating}
           />
         ))}
       </section>

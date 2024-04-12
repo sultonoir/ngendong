@@ -6,6 +6,7 @@ import { Button } from "@nextui-org/button";
 import { Avatar } from "@nextui-org/avatar";
 import MenuSession from "./MenuSession";
 import { type Session } from "next-auth";
+import NotifyCount from "../../notify/NotifyCount";
 
 interface userButtonProps {
   session: Session | null;
@@ -27,9 +28,7 @@ const UserButton = ({ session }: userButtonProps) => {
             size="sm"
             src={session?.user.image ?? "/placeholder.jpg"}
           />
-          <span className="absolute right-0 top-0 flex size-5 items-center justify-center rounded-full border border-background bg-primary text-xs font-extrabold text-white">
-            {1}
-          </span>
+          <NotifyCount />
         </Button>
       </DropdownTrigger>
       {session ? <MenuSession /> : <MenuNotSession />}
