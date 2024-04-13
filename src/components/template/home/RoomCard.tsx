@@ -54,7 +54,10 @@ const RoomCard = ({ room, picture, location, rating }: Props) => {
                   key={img.id}
                   className="group relative aspect-square w-[calc(100%-1px)] overflow-hidden rounded-lg"
                 >
-                  <Link href={`/rooms/${room.slug}`}>
+                  <Link
+                    href={`/rooms/${room.slug}`}
+                    className="relative flex aspect-square h-full"
+                  >
                     <Image
                       alt="Card background"
                       className="aspect-square size-full object-cover"

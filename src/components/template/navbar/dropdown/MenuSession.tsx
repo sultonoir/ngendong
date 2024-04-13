@@ -22,16 +22,6 @@ const MenuSession = () => {
   };
   const items = [
     {
-      key: "message",
-      label: "Message",
-      path: "/message",
-    },
-    {
-      key: "notifications",
-      label: "Notifications",
-      path: "/notifications",
-    },
-    {
       key: "wishlists",
       label: "Wishlists",
       path: "/wishlists",
@@ -52,7 +42,7 @@ const MenuSession = () => {
         ))}
       </DropdownSection>
       <DropdownSection showDivider>
-        <DropdownItem href="/host">Make a place to stay</DropdownItem>
+        <DropdownItem href="/owner">Manage listings</DropdownItem>
         <DropdownItem href="/help-center">Help center</DropdownItem>
       </DropdownSection>
       <DropdownItem

@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Button } from "@nextui-org/button";
 import Categories from "./category/Categories";
 import Header from "./header";
+import NotifyDropDown from "../notify/NotifyDropDown";
+import ButtonTrigerLogin from "@/components/ui/ButtonTrigerLogin";
 
 const MainNavbar = async () => {
   const session = await getServerAuthSession();
@@ -14,18 +16,25 @@ const MainNavbar = async () => {
       <div className="border-b border-default/50">
         <div className="container flex items-center justify-between py-2">
           <Logo />
-          <div className="flex items-center gap-2">
-            <Button
-              as={Link}
-              href={session?.user.role === "admin" ? "/owner" : "host"}
-              radius="full"
-              variant="light"
-              color="default"
-            >
-              Switch to owner
-            </Button>
-            <UserButton session={session} />
-          </div>
+          {session ? (
+            <div className="flex items-center gap-2">
+              <NotifyDropDown />
+              <UserButton session={session} />
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Button
+                as={Link}
+                href="/host"
+                radius="full"
+                variant="light"
+                color="default"
+              >
+                Switch to owner
+              </Button>
+              <ButtonTrigerLogin/>
+            </div>
+          )}
         </div>
       </div>
       <Categories />

@@ -38,18 +38,15 @@ const ButtonWishlist = ({ roomId }: Props) => {
       }
     >
       <div className="absolute right-3 top-3">
-        <AiOutlineHeart
-          className="absolute -right-[2px] -top-[2px] size-8 fill-white
-        "
-        />
+        <AiOutlineHeart className="absolute -right-[2px] -top-[2px] size-8 fill-white" />
         <AiFillHeart
           className={cn(
             "size-7 fill-default-500",
             {
-              "fill-rose-500": data,
+              "fill-rose-500": data === true,
             },
             {
-              "fill-rose-500": isPending,
+              "fill-rose-500": isPending === true,
             },
           )}
         />

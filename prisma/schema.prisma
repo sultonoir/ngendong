@@ -64,14 +64,14 @@ model Messages {
   message        String
   userId         String
   conversationId String
+  isRead         Boolean      @default(false)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
-  @@index([id])
   @@index([conversationId])
+  @@index([userId])
 }
 
 model Member {
@@ -96,7 +96,8 @@ enum CategoryNotify {
 
 model Notifi {
   id            String         @id @default(cuid())
-  isRead        Boolean
+  isRead        Boolean        @default(false)
+  isOpen        Boolean        @default(false)
   message       String
   role          CategoryNotify @default(payment)
   createdAt     DateTime       @default(now())

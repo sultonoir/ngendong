@@ -7,13 +7,17 @@ import {
 } from "@/server/api/trpc";
 
 export const wishlistRoute = createTRPCRouter({
-  getWishlists: publicProcedure
+  getWishlists: protectedProcedure
     .input(
       z.object({
         roomId: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
+      const id = ctx.session.user.id;
+      if (!id) {
+        return null;
+      }
       const wishlist = await ctx.db.whishlist.findMany({
         where: {
           userId: ctx.session?.user.id,

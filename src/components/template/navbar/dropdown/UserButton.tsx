@@ -1,7 +1,6 @@
 import { Dropdown, DropdownTrigger } from "@nextui-org/dropdown";
 import { IoIosMenu } from "react-icons/io";
 import React from "react";
-import MenuNotSession from "./MenuNotSession";
 import { Button } from "@nextui-org/button";
 import { Avatar } from "@nextui-org/avatar";
 import MenuSession from "./MenuSession";
@@ -31,7 +30,7 @@ const UserButton = ({ session }: userButtonProps) => {
           <NotifyCount />
         </Button>
       </DropdownTrigger>
-      {session ? <MenuSession /> : <MenuNotSession />}
+      <MenuSession/>
     </Dropdown>
   );
 };
