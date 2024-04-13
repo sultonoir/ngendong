@@ -86,7 +86,12 @@ export const orderRoute = createTRPCRouter({
           userId: ctx.session.user.id,
         },
       });
-      return order.roomId;
+      const rooms = await ctx.db.room.findUniqueOrThrow({
+        where: {
+          id: order.roomId,
+        },
+      });
+      return rooms.slug;
     }),
   confirmPayment: protectedProcedure
     .input(

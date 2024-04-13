@@ -17,7 +17,7 @@ const ButtonCancelPayment = ({ id }: Props) => {
       toast.error(e.message);
     },
     onSuccess: (e) => {
-      router.push(`/roos/${e}`);
+      router.push(`/rooms/${e}`);
     },
   });
 
