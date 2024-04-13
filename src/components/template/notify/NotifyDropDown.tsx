@@ -1,37 +1,35 @@
 "use client";
+
 import React from "react";
+import { BiBell } from "react-icons/bi";
 import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
   Button,
 } from "@nextui-org/react";
-import { BiBell } from "react-icons/bi";
 import NotifyCount from "./NotifyCount";
+
 const NotifyDropDown = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
   return (
-    <Dropdown>
-      <DropdownTrigger>
+    <Popover isOpen={isOpen} onOpenChange={(open) => setIsOpen(open)}>
+      <PopoverTrigger>
         <Button
           variant="ghost"
           radius="full"
+          size="lg"
           isIconOnly
           className="relative overflow-visible"
         >
-          <BiBell />
-          <NotifyCount/>
+          <BiBell size={24} />
+          <NotifyCount />
         </Button>
-      </DropdownTrigger>
-      <DropdownMenu aria-label="Static Actions">
-        <DropdownItem key="new">New file</DropdownItem>
-        <DropdownItem key="copy">Copy link</DropdownItem>
-        <DropdownItem key="edit">Edit file</DropdownItem>
-        <DropdownItem key="delete" className="text-danger" color="danger">
-          Delete file
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+      </PopoverTrigger>
+      <PopoverContent className="w-60 p-4">
+        <div>hallo</div>
+      </PopoverContent>
+    </Popover>
   );
 };
 

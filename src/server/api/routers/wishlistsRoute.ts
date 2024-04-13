@@ -7,14 +7,14 @@ import {
 } from "@/server/api/trpc";
 
 export const wishlistRoute = createTRPCRouter({
-  getWishlists: protectedProcedure
+  getWishlists: publicProcedure
     .input(
       z.object({
         roomId: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const id = ctx.session.user.id;
+      const id = ctx.session?.user.id;
       if (!id) {
         return null;
       }

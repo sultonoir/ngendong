@@ -8,11 +8,13 @@ const ButtonTrigerLogin = () => {
   const { onOpen, handleStatus } = useDialog();
   return (
     <Button
+      variant="solid"
+      color="primary"
       onClick={() => {
         handleStatus("signin");
         onOpen(true);
       }}
-      startContent={<LuLogIn size={30} />}
+      startContent={<LuLogIn size={20} />}
     >
       Login
     </Button>

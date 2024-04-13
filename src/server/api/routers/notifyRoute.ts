@@ -5,9 +5,19 @@ export const notifyRoute = createTRPCRouter({
     const notifi = await ctx.db.notifi.findMany({
       where: {
         userId: ctx.session.user.id,
-        isRead: false,
+        isOpen: false,
       },
     });
     return notifi.length;
+  }),
+  getNotifyforpayment: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.notifi.updateMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      data: {
+        isOpen: true,
+      },
+    });
   }),
 });
