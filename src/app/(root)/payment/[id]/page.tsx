@@ -2,10 +2,12 @@ import { api } from "@/trpc/server";
 import React from "react";
 import { notFound } from "next/navigation";
 import { Input } from "@nextui-org/input";
-import Image from "next/image";
-import { IoMdStar } from "react-icons/io";
 import ButtonCancelPayment from "@/components/ui/ButtonCancelPayment";
 import ButtonCreatePayment from "@/components/ui/ButtonCreatePayment";
+import RoomImage from "@/components/template/room/RoomImage";
+import { Button } from "@nextui-org/button";
+import { FaCcPaypal, FaCreditCard } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 interface Props {
   params: {
@@ -29,66 +31,72 @@ const Page = async ({ params }: Props) => {
   }
 
   return (
-    <main className="container max-w-screen-xl py-10">
-      <div className="flex items-center gap-2">
-        <ButtonCancelPayment id={data.order.id} />
-        <p className="text-3xl font-semibold">Confirm and Pay</p>
-      </div>
-      <div className="relative grid grid-cols-1 gap-10 py-10 lg:grid-cols-2">
-        <div className="space-y-4">
-          <div className="flex gap-2">
-            <Input label="Email" />
-            <Input label="Name" />
+    <main className="h-[calc(100dvh-66px)]">
+      <section className="grid h-full grid-cols-1 lg:grid-cols-2">
+        <div className="container flex flex-col justify-center gap-10 bg-content1">
+          <div className="grid grid-cols-1 gap-1">
+            <h1 className="text-lg text-muted-foreground">Total amout</h1>
+            <h2 className="text-3xl font-bold">${data.order.totalPrice}</h2>
           </div>
-          <Input label="Card number" />
-          <div className="flex gap-2">
+          <RoomImage picture={data.order.room.imageRoom} />
+        </div>
+        <div className="container flex max-w-lg flex-col justify-center gap-10">
+          <div className="flex items-center gap-3">
+            <ButtonCancelPayment id={data.order.id} />
+            <p className="text-2xl font-semibold">Payment</p>
+          </div>
+
+          <div className="flex w-full flex-col gap-1">
+            <p className="text-large">Type</p>
+            <div className="flex w-full gap-2">
+              <Button
+                variant="ghost"
+                color="primary"
+                startContent={<FaCreditCard />}
+                className="text-foreground"
+              >
+                Card
+              </Button>
+              <Button
+                variant="ghost"
+                startContent={<FcGoogle />}
+                className="text-foreground"
+              >
+                Pay
+              </Button>
+              <Button
+                variant="ghost"
+                startContent={<FaCcPaypal />}
+                className="text-foreground"
+              >
+                Pay
+              </Button>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-3">
             <Input
-              label="Expiration"
-              placeholder="MM/YY"
-              labelPlacement="inside"
-              type="number"
+              label="Card informations"
+              labelPlacement="outside"
+              placeholder="XXXX - XXXX - XXXX"
             />
-            <Input label="CVV" className="w-1/3" />
+            <div className="flex items-center gap-2">
+              <Input labelPlacement="outside" placeholder="MM/YY" />
+              <Input labelPlacement="outside" placeholder="CVV" />
+            </div>
           </div>
+          <Input
+            label="Name on card"
+            labelPlacement="outside"
+            placeholder="Jhon doe"
+          />
+          <Input
+            label="Country or regions"
+            labelPlacement="outside"
+            placeholder="JP, Tokyo"
+          />
           <ButtonCreatePayment id={data.order.id} />
         </div>
-        <div className="flex h-fit flex-col gap-4 rounded-lg bg-accent p-4">
-          <div className="flex items-center gap-4">
-            <div className="relative aspect-square size-20 flex-shrink-0 overflow-hidden rounded-md">
-              <Image
-                src={data.order.room.imageRoom.at(0)?.url ?? "/placeholder.jpg"}
-                alt={data.order.room.title}
-                fill
-                priority
-                loading="eager"
-                className="object-cover"
-              />
-            </div>
-            <div className="space-y-1">
-              {data.order.room.title}
-              <div>
-                {data.result === 0 ? (
-                  <div className="flex items-center gap-2">
-                    <IoMdStar />
-                    <span className="text-sm text-muted-foreground">New</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <IoMdStar />
-                    <span className="text-sm text-muted-foreground">
-                      {data.result}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center justify-between border-t border-default-400 pt-3">
-            <p className="text-lg text-muted-foreground">Total</p>
-            <p className="text-2xl font-bold">${data.order.totalPrice}</p>
-          </div>
-        </div>
-      </div>
+      </section>
     </main>
   );
 };
