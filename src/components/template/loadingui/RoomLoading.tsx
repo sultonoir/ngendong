@@ -4,7 +4,7 @@ import { Skeleton } from "@nextui-org/skeleton";
 const RoomLoading = () => {
   const loader = Array.from({ length: 15 }, (value, index) => index);
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-6">
+    <div className="grid grid-cols-1 gap-4 py-10 lg:grid-cols-6">
       {loader.map((_, index) => (
         <div className="flex h-[300px] flex-col gap-2" key={index}>
           <Skeleton className="h-[144px] w-full" />

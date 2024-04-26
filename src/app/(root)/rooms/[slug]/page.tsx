@@ -9,6 +9,7 @@ import RoomReserv from "@/components/template/room/RoomReserv";
 import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@nextui-org/skeleton";
+import ButtonWishlist from "@/components/ui/ButtonWishlists";
 interface Props {
   params: {
     slug: string;
@@ -96,8 +97,12 @@ const page = async ({ params }: Props) => {
 
   return (
     <main className="container max-w-screen-xl py-4">
-      <section className="flex items-center justify-between py-4">
+      <section className="flex flex-col items-center justify-between py-4 lg:flex-row">
         <h1 className="text-lg font-semibold lg:text-[26px]">{data.title}</h1>
+        <div className="flex items-center gap-2">
+          <ButtonWishlist roomId={data.id} varian="flex" />
+          <ButtonWishlist roomId={data.id} varian="flex" />
+        </div>
       </section>
       <RoomImage picture={data?.imageRoom} />
       <div className="relative my-10 flex flex-col gap-10 lg:flex-row">

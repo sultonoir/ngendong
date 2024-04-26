@@ -35,17 +35,20 @@ const Page = async ({ params }: Props) => {
       <section className="grid h-full grid-cols-1 lg:grid-cols-2">
         <div className="container flex flex-col justify-center gap-10 bg-content1">
           <div className="grid grid-cols-1 gap-1">
+            <div className="flex items-center gap-3 lg:hidden">
+              <ButtonCancelPayment id={data.order.id} />
+              <p className="text-2xl font-semibold">Payment</p>
+            </div>
             <h1 className="text-lg text-muted-foreground">Total amout</h1>
             <h2 className="text-3xl font-bold">${data.order.totalPrice}</h2>
           </div>
           <RoomImage picture={data.order.room.imageRoom} />
         </div>
         <div className="container flex max-w-lg flex-col justify-center gap-10">
-          <div className="flex items-center gap-3">
+          <div className="hidden items-center gap-3 lg:flex">
             <ButtonCancelPayment id={data.order.id} />
             <p className="text-2xl font-semibold">Payment</p>
           </div>
-
           <div className="flex w-full flex-col gap-1">
             <p className="text-large">Type</p>
             <div className="flex w-full gap-2">

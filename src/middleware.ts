@@ -8,5 +8,6 @@ export const config = {
     "/favotites,",
     "/about/:path*",
     "/become-a-host/:path*",
+    "/payment:path*",
   ],
 };

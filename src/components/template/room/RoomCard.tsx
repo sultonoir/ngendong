@@ -33,7 +33,7 @@ const RoomCard = ({ room, picture, location, rating }: Props) => {
     >
       <CardHeader className=" p-0">
         <div className="relative aspect-square w-[calc(100%-1px)] overflow-hidden rounded-lg">
-          <ButtonWishlist roomId={room.id} />
+          <ButtonWishlist roomId={room.id} varian="default" />
           <Swiper
             spaceBetween={30}
             navigation={{
@@ -83,10 +83,13 @@ const RoomCard = ({ room, picture, location, rating }: Props) => {
           <div className="flex-1">
             <div className="max-w-[calc(100%-10px)] truncate text-[15px] font-semibold">
               <Link href={`/rooms/${room.slug}`}>
-                {location?.name},{location?.country}
+                {location?.name},{" "}
+                <span className="capitalize">{location?.country}</span>
               </Link>
             </div>
-            <div className="text-[15px] text-default-500">{room.category}</div>
+            <div className="text-[15px] capitalize text-default-500">
+              {room.category}
+            </div>
             <div>
               <b>${room.price}</b>
               <span className="text-[15px] text-default-500"> Night.</span>

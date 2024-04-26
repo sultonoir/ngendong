@@ -24,7 +24,7 @@ export const wishlistRoute = createTRPCRouter({
           roomId: input.roomId,
         },
       });
-      const result = wishlist.length ? true : false;
+      const result = wishlist.length > 0;
       return result;
     }),
   addWishlist: protectedProcedure
