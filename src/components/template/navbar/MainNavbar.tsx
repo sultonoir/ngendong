@@ -7,7 +7,7 @@ import { Button } from "@nextui-org/button";
 import Categories from "./category/Categories";
 import Header from "./header";
 import NotifyDropDown from "../notify/NotifyDropDown";
-import ButtonTrigerLogin from "@/components/ui/ButtonTrigerLogin";
+import ButtonTrigerLogin from "@/components/ui/button/ButtonTrigerLogin";
 
 const MainNavbar = async () => {
   const session = await getServerAuthSession();

@@ -9,7 +9,8 @@ import RoomReserv from "@/components/template/room/RoomReserv";
 import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@nextui-org/skeleton";
-import ButtonWishlist from "@/components/ui/ButtonWishlists";
+import ButtonWishlist from "@/components/ui/button/ButtonWishlists";
+import ButtonShare from "@/components/ui/button/ButtonShare";
 interface Props {
   params: {
     slug: string;
@@ -100,7 +101,14 @@ const page = async ({ params }: Props) => {
       <section className="flex flex-col items-center justify-between py-4 lg:flex-row">
         <h1 className="text-lg font-semibold lg:text-[26px]">{data.title}</h1>
         <div className="flex items-center gap-2">
-          <ButtonWishlist roomId={data.id} varian="flex" />
+          <ButtonShare
+            title={data.title}
+            city={data.locationValue?.name}
+            images={data.imageRoom[0]?.url ?? "/placeholder.jpg"}
+            beds={data.bed}
+            guest={data.guestCount}
+            bedroom={data.roomCount}
+          />
           <ButtonWishlist roomId={data.id} varian="flex" />
         </div>
       </section>
