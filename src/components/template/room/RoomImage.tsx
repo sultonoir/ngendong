@@ -15,10 +15,11 @@ interface Props {
 }
 
 const RoomImage = ({ picture }: Props) => {
+  
   return (
     <>
       <section className="relative hidden h-[500px] w-full grid-cols-4 grid-rows-2 gap-4 overflow-hidden rounded-lg md:grid">
-        {picture?.map((item, index) => (
+        {picture?.slice(0, 5).map((item, index) => (
           <div
             className={cn("relative col-span-1", {
               "col-span-2 row-span-2": index === 0,

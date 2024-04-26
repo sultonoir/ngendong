@@ -33,7 +33,9 @@ const FieldHome = ({
               alt="logo"
               fill
               loading="eager"
-              className="size-auto object-contain"
+              priority
+              sizes="(min-width: 1360px) 588px, (min-width: 1040px) calc(40vw + 52px), calc(100vw - 64px)"
+              className="object-contain"
             />
           </div>
         </section>

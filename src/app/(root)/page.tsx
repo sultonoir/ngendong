@@ -1,4 +1,4 @@
-import RoomCard from "@/components/template/home/RoomCard";
+import RoomCard from "@/components/template/room/RoomCard";
 import { api } from "@/trpc/server";
 import { type Metadata } from "next";
 import React from "react";

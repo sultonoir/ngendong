@@ -18,6 +18,17 @@ const MainNavbar = async () => {
           <Logo />
           {session ? (
             <div className="flex items-center gap-2">
+              {session.user.role === "guest" && (
+                <Button
+                  as={Link}
+                  href="/host"
+                  radius="full"
+                  variant="light"
+                  color="default"
+                >
+                  Switch to owner
+                </Button>
+              )}
               <NotifyDropDown />
               <UserButton session={session} />
             </div>
@@ -32,7 +43,7 @@ const MainNavbar = async () => {
               >
                 Switch to owner
               </Button>
-              <ButtonTrigerLogin/>
+              <ButtonTrigerLogin />
             </div>
           )}
         </div>

@@ -15,7 +15,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/pagination";
 import ButtonWishlist from "@/components/ui/ButtonWishlists";
 
 interface Props {

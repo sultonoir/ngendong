@@ -16,13 +16,13 @@ const FieldDesc = () => {
         <div>
           <Textarea
             variant="bordered"
-            maxLength={500}
+            maxLength={1000}
             minRows={10}
             value={desc}
             onChange={(e) => descChange(e.target.value)}
           />
           <br />
-          <p>{desc.length}/500</p>
+          <p>{desc.length}/1000</p>
         </div>
       </div>
     </div>

@@ -5,7 +5,8 @@ export const config = {
     "/trips",
     "/reservations",
     "/properties",
-    "/favotites, '/about/:path*",
+    "/favotites,",
+    "/about/:path*",
     "/become-a-host/:path*",
   ],
 };

@@ -65,7 +65,6 @@ const RoomReserv = ({ guest: maxGuest, price, id }: Props) => {
     }
   };
 
-  console.log({ date });
   return (
     <div className="sticky top-[75px] hidden h-fit w-full flex-shrink-0 rounded-lg border border-accent bg-content1 p-4 shadow-sm lg:block lg:w-fit">
       <div className="flex flex-col gap-4">

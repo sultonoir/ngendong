@@ -19,13 +19,13 @@ const FieldTitle = () => {
         <div>
           <Textarea
             variant="bordered"
-            maxLength={32}
+            maxLength={200}
             minRows={10}
             value={title}
             onChange={(e) => titleChange(e.target.value)}
           />
           <br />
-          <p>{title.length}/32</p>
+          <p>{title.length}/200</p>
         </div>
       </div>
     </div>

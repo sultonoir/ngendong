@@ -4,12 +4,16 @@ import { cn } from "@nextui-org/react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import useDialog from "@/hooks/useDialog";
 
 interface Props {
   roomId: string;
 }
 
 const ButtonWishlist = ({ roomId }: Props) => {
+  const { data: user } = useSession();
+  const { onOpen } = useDialog();
   const ctx = api.useUtils();
   const { data } = api.wishlists.getWishlists.useQuery({
     roomId,
@@ -28,14 +32,19 @@ const ButtonWishlist = ({ roomId }: Props) => {
     },
   });
 
+  const handleClick = () => {
+    if (!user) {
+      onOpen(true);
+    } else {
+      mutate({
+        roomId,
+      });
+    }
+  };
   return (
     <div
       className="group relative z-10 cursor-pointer transition hover:opacity-80"
-      onClick={() =>
-        mutate({
-          roomId,
-        })
-      }
+      onClick={handleClick}
     >
       <div className="absolute right-3 top-3">
         <AiOutlineHeart className="absolute -right-[2px] -top-[2px] size-8 fill-white" />
